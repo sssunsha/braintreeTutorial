@@ -10,6 +10,12 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+// global controller
+app.get('/form',function(req,res,next){
+  res.header('X-Frame-Options' , 'SAMEORIGIN' );
+  next(); // http://expressjs.com/guide.html#passing-route control
+});
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
