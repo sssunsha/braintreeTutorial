@@ -22,3 +22,8 @@ and update checkout.js like so
 
     var gateway = braintree.connect({
       environment: braintree.Environment.Pipedream,
+
+
+# others
+1. authorization service code is at: /routes/checkout.js
+2. client code is at: /views/form.hbs
