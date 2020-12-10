@@ -1,5 +1,14 @@
 # braintreeTutorial
 
+How to use:
+1. npm install
+2. npm start
+3. visit localhost:3000 on your browser
+4. input crade number, etc. and click `pay`
+5. F12 to check the network and if succes, in the browser console will print the transaction id, then you can check it in the Braintree cli
+https://sandbox.braintreegateway.com/login
+
+
 if you wish to catch the requests
 
 add below codes into ./node_modules/braintree/lib/braintree/environment.js
