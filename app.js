@@ -31,7 +31,7 @@ app.use('/form', formRouter);
 app.use('/users', usersRouter);
 // The checkout route
 var checkout = require('./routes/checkout');
-app.use('/checkout', checkout);
+app.use('/submit', checkout);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

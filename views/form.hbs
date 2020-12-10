@@ -11,100 +11,126 @@
   <div id="checkout-message"></div>
 
   <label for="amount">Amount</label>
-  <input type="number" id="amount" value="10"  />
+  <input type="number" id="amount" value="10" />
 
   <input type="submit" value="Pay" disabled />
 </form>
 
 <script>
-var form = document.querySelector('#hosted-fields-form');
-var submit = document.querySelector('input[type="submit"]');
+  var form = document.querySelector('#hosted-fields-form');
+  var submit = document.querySelector('input[type="submit"]');
+  var deviceData = null;
 
-braintree.client.create({
-  authorization: 'sandbox_7bj2hcqr_mpmfynzxz947hjzd'
-}, function (clientErr, clientInstance) {
-  if (clientErr) {
-    console.error(clientErr);
-    return;
-  }
-
-  // This example shows Hosted Fields, but you can also use this
-  // client instance to create additional components here, such as
-  // PayPal or Data Collector.
-
-  braintree.hostedFields.create({
-    client: clientInstance,
-    styles: {
-      'input': {
-        'font-size': '14px'
-      },
-      'input.invalid': {
-        'color': 'red'
-      },
-      'input.valid': {
-        'color': 'green'
-      }
-    },
-    fields: {
-      number: {
-        selector: '#card-number',
-        placeholder: '4111 1111 1111 1111'
-      },
-      cvv: {
-        selector: '#cvv',
-        placeholder: '123'
-      },
-      expirationDate: {
-        selector: '#expiration-date',
-        placeholder: '10/2022'
-      }
-    }
-  }, function (hostedFieldsErr, hostedFieldsInstance) {
-    if (hostedFieldsErr) {
-      console.error(hostedFieldsErr);
+  braintree.client.create({
+    authorization: 'sandbox_mfw29vzd_mpmfynzxz947hjzd'
+  }, function (clientErr, clientInstance) {
+    if (clientErr) {
+      console.error(clientErr);
       return;
     }
 
-    submit.removeAttribute('disabled');
+    // This example for device data collection
+    braintree.dataCollector.create({
+      client: clientInstance
+    }, function (err, dataCollectorInstance) {
+      if (err) {
+        // Handle error in creation of data collector
+        console.error(err);
+        return;
+      }
+      // At this point, you should access the dataCollectorInstance.deviceData value and provide it
+      // to your server, e.g. by injecting it into your form as a hidden input.
+      deviceData = dataCollectorInstance.deviceData;
 
-    form.addEventListener('submit', function (event) {
-      event.preventDefault();
+      // This example shows Hosted Fields, but you can also use this
+      // client instance to create additional components here, such as
+      // PayPal or Data Collector.
 
-      hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
-        if (tokenizeErr) {
-          console.error(tokenizeErr);
+      braintree.hostedFields.create({
+        client: clientInstance,
+        styles: {
+          'input': {
+            'font-size': '14px'
+          },
+          'input.invalid': {
+            'color': 'red'
+          },
+          'input.valid': {
+            'color': 'green'
+          }
+        },
+        fields: {
+          number: {
+            selector: '#card-number',
+            placeholder: '4111 1111 1111 1111'
+          },
+          cvv: {
+            selector: '#cvv',
+            placeholder: '123'
+          },
+          expirationDate: {
+            selector: '#expiration-date',
+            placeholder: '10/2022'
+          }
+        }
+      }, function (hostedFieldsErr, hostedFieldsInstance) {
+        if (hostedFieldsErr) {
+          console.error(hostedFieldsErr);
           return;
         }
 
-        // If this was a real integration, this is where you would
-        // send the nonce to your server.
-        console.log('Got a nonce: ' + payload.nonce);
+        submit.removeAttribute('disabled');
 
-        $.ajax({
-                            type: 'POST',
-                            url: '/checkout',
-                            data: { 'paymentMethodNonce': payload.nonce,
-                                    'amount' : document.getElementById('amount').value }
-                        }).done(function (result) {
-                            hostedFieldsInstance.teardown(function (teardownErr) {
-                                if (teardownErr) {
-                                    console.error('Could not tear down Drop-in UI!');
-                                } else {
-                                    console.info('Drop-in UI has been torn down!');
-                                    $('#submit-button').remove();
-                                }
-                            });
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
 
-                            if (result.success) {
-                                $('#checkout-message').html('<h1>Success</h1><p>Your Drop-in UI is working! Check your <a href="https://sandbox.braintreegateway.com/login">sandbox Control Panel</a> for your test transactions.</p><p>Refresh to try another transaction.</p>');
-                            } else {
-                                console.log(result);
-                                $('#checkout-message').html('<h1>Error</h1><p>Check your console.</p>');
-                            }
-                        });
+          hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
+            if (tokenizeErr) {
+              console.error(tokenizeErr);
+              return;
+            }
 
+            // If this was a real integration, this is where you would
+            // send the nonce to your server.
+            console.log('Got a nonce: ' + payload.nonce);
+
+            $.ajax({
+              type: 'POST',
+              url: '/submit',
+              data: {
+                'paymentMethodNonce': payload.nonce,
+                'amount': document.getElementById('amount').value,
+                'deviceData': deviceData
+              }
+            }).done(function (result) {
+              hostedFieldsInstance.teardown(function (teardownErr) {
+                if (teardownErr) {
+                  console.error('Could not tear down Drop-in UI!');
+                } else {
+                  console.info('Drop-in UI has been tear down!');
+                  $('#submit-button').remove();
+                }
+              });
+
+              dataCollectorInstance.teardown(function () {
+                // teardown is complete
+                 console.info('Drop-in UI has been tear down!');
+              });
+
+              if (result.success) {
+                console.log("authorization success : " + result.transaction.id);
+                $('#checkout-message').html('<h1>Success</h1><p></p><p>Your Drop-in UI is working! Check your <a href="https://sandbox.braintreegateway.com/login">sandbox Control Panel</a> for your test transactions.</p><p>Refresh to try another transaction.</p>');
+              } else {
+                console.log(result);
+                $('#checkout-message').html('<h1>Error</h1><p>Check your console.</p>');
+              }
+            });
+
+          });
+        }, false);
       });
-    }, false);
+    });
   });
-});
+
+
 </script>
