@@ -6,7 +6,7 @@ var braintree = require('braintree');
 router.post('/', function(req, res, next) {
 
   var gateway = braintree.connect({
-    // environment: braintree.Environment.Sandbox,
+    // environment: braintree.Environment.Pipedream,
     environment: braintree.Environment.Sandbox,
     // Use your own credentials from the sandbox Control Panel here
     merchantId: 'mpmfynzxz947hjzd',
@@ -18,17 +18,20 @@ router.post('/', function(req, res, next) {
   var nonceFromTheClient = req.body.paymentMethodNonce;
   var amountFromTheClient = req.body.amount;
   var deviceDataFromTheClient = req.body.deviceData;
+  var orderIdFromClient = req.body.orderId;
   // Create a new transaction for $10
   var newTransaction = gateway.transaction.sale({
     amount: amountFromTheClient,
     paymentMethodNonce: nonceFromTheClient,
     deviceData: deviceDataFromTheClient,
+    orderId: orderIdFromClient,
     options: {
       // This option requests the funds from the transaction
       // once it has been authorized successfully
       submitForSettlement: false
     }
   }, function(error, result) {
+    console.log(JSON.stringify(result));
       if (result) {
         res.send(result);
       } else {

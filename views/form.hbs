@@ -13,6 +13,12 @@
   <label for="amount">Amount</label>
   <input type="number" id="amount" value="10" />
 
+  <p></p>
+  <div>Below is just for testing</div>
+
+  <div>orderId:</div><p>
+  <input id="orderId" type="input" value="">
+
   <input type="submit" value="Pay" disabled />
 </form>
 
@@ -20,6 +26,10 @@
   var form = document.querySelector('#hosted-fields-form');
   var submit = document.querySelector('input[type="submit"]');
   var deviceData = null;
+
+
+// reference_id just for test
+  var orderId = '123456';
 
   braintree.client.create({
     authorization: 'sandbox_mfw29vzd_mpmfynzxz947hjzd'
@@ -94,13 +104,19 @@
             // send the nonce to your server.
             console.log('Got a nonce: ' + payload.nonce);
 
+            // below data should be replace with freemark input
+            orderId = document.getElementById('orderId').value || orderId;
+
+
+
             $.ajax({
               type: 'POST',
               url: '/submit',
               data: {
                 'paymentMethodNonce': payload.nonce,
                 'amount': document.getElementById('amount').value,
-                'deviceData': deviceData
+                'deviceData': deviceData,
+                'orderId': orderId,
               }
             }).done(function (result) {
               hostedFieldsInstance.teardown(function (teardownErr) {
