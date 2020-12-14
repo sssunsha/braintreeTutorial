@@ -80,14 +80,14 @@
             </svg>
           </span>
           Amount</label>
-        <input type="text" id="amount" class="hosted-field" readonly/>
+        <input type="text" id="amount" class="hosted-field" readonly />
         <!-- End hosted fields section -->
       </div>
       <div id="checkout-message"></div>
       <div id="error-message"></div>
     </div>
     <footer class="panel__footer">
-      <input type="submit" value="Pay" class="pay-button" id="submit-button" disabled/>
+      <input type="submit" value="Pay" class="pay-button" id="submit-button" disabled />
     </footer>
   </div>
 </form>
@@ -293,7 +293,43 @@ Media Queries
   var amount = '10';
   var relayRedirctUrl = "https://example.com/success/123456_1607932548367"
   var authorizationCode = 'sandbox_mfw29vzd_mpmfynzxz947hjzd';
-  
+
+  var threeDSecureParameters = {
+    amount: '',
+    nonce: '', // Example: hostedFieldsTokenizationPayload.nonce
+    bin: '', // Example: hostedFieldsTokenizationPayload.details.bin
+    email: '',
+    billingAddress: {
+      givenName: '', // ASCII-printable characters required, else will throw a validation error
+      surname: '', // ASCII-printable characters required, else will throw a validation error
+      phoneNumber: '',
+      streetAddress: '',
+      extendedAddress: '',
+      locality: '',
+      region: '',
+      postalCode: '',
+      countryCodeAlpha2: ''
+    },
+    additionalInformation: {
+      workPhoneNumber: '',
+      shippingGivenName: '',
+      shippingSurname: '',
+      shippingPhone: '',
+      shippingAddress: {
+        streetAddress: '',
+        extendedAddress: '',
+        locality: '',
+        region: '',
+        postalCode: '',
+        countryCodeAlpha2: ''
+      }
+    },
+    onLookupComplete: function (data, next) {
+      // use `data` here, then call `next()`
+      next();
+    }
+  };
+
 
   // init
   document.querySelector('#amount').value = amount;
@@ -322,7 +358,6 @@ Media Queries
       // This example shows Hosted Fields, but you can also use this
       // client instance to create additional components here, such as
       // PayPal or Data Collector.
-
       braintree.hostedFields.create({
         client: clientInstance,
         styles: {
@@ -378,8 +413,31 @@ Media Queries
               $('#error-message').html(tokenizeErr.message);
               return;
             }
-            // below data should be replace with freemark input
-            orderId = document.getElementById('orderId').value || orderId;
+
+            // for 3ds
+            braintree.threeDSecure.create({
+              version: 2, // Will use 3DS 2 whenever possible
+              client: clientInstance
+            }, function (threeDSecureErr, threeDSecureInstance) {
+              if (threeDSecureErr) {
+                // Handle error in 3D Secure component creation
+                $('#error-message').html(threeDSecureErr.message);
+                return;
+              }
+
+              threeDSecure = threeDSecureInstance;
+              threeDSecureParameters.nonce = payload.nonce;
+              threeDSecureParameters.bin = payload.details.bin;
+              threeDSecureParameters.amount = amount;
+
+              threeDSecure.verifyCard(threeDSecureParameters, function (err, response) {
+                // Handle response
+                if (err) {
+                  $('#error-message').html(err.message);
+                  return;
+                }
+              });
+            });
 
             $.ajax({
               type: 'POST',
@@ -401,7 +459,7 @@ Media Queries
                 }
               });
 
-              dataCollectorInstance.teardown(function () {});
+              dataCollectorInstance.teardown(function () { });
 
               if (result.success) {
                 console.log("authorization success : " + result.transaction.id);
