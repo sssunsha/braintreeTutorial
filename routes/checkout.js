@@ -15,7 +15,7 @@ router.post('/', function(req, res, next) {
   });
 
   // Use the payment method nonce here
-  var nonceFromTheClient = req.body.paymentMethodNonce;
+  var nonceFromTheClient = req.body.encryptedToken;
   var amountFromTheClient = req.body.amount;
   var deviceDataFromTheClient = req.body.deviceData;
   var orderIdFromClient = req.body.orderId;

@@ -291,6 +291,7 @@ Media Queries
   // data should be input from payment service
   var orderId = '123456';
   var amount = '10';
+  var relayRedirctUrl = "https://example.com/success/123456_1607932548367"
   var authorizationCode = 'sandbox_mfw29vzd_mpmfynzxz947hjzd';
   
 
@@ -395,7 +396,9 @@ Media Queries
               type: 'POST',
               url: '/submit',
               data: {
-                'paymentMethodNonce': payload.nonce,
+                'encryptedToken': payload.nonce,
+                'channel': 'BROWSER',
+                // this property is only used for local test
                 'amount': amount,
                 'deviceData': deviceData,
                 'orderId': orderId,
@@ -417,9 +420,11 @@ Media Queries
               if (result.success) {
                 console.log("authorization success : " + result.transaction.id);
                 $('#checkout-message').html('<h1>Payment Success</h1><p></p><p>Refresh to try another transaction.</p>');
+                window.navigate(relayRedirctUrl);
               } else {
                 console.log(result);
                 $('#merror-message').html(result.message);
+                window.navigate(relayRedirctUrl);
               }
             });
 
