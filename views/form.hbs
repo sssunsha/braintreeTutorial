@@ -80,12 +80,14 @@
             </svg>
           </span>
           Amount</label>
-        <input type="text" id="amount" class="hosted-field" />
+        <input type="text" id="amount" class="hosted-field" readonly/>
         <!-- End hosted fields section -->
       </div>
+      <div id="checkout-message"></div>
+      <div id="error-message"></div>
     </div>
     <footer class="panel__footer">
-      <input type="submit" value="Pay" class="pay-button" />
+      <input type="submit" value="Pay" class="pay-button" id="submit-button" disabled/>
     </footer>
   </div>
 </form>
@@ -230,6 +232,10 @@ PANEL FORM
     box-shadow: 0 0 2px rgba(0, 0, 0, .12), 0 2px 2px rgba(0, 0, 0, .2);
   }
 
+  #error-message {
+    color: red;
+  }
+
 
   /*--------------------
 BT HOSTED FIELDS SPECIFIC 
@@ -282,13 +288,20 @@ Media Queries
   var deviceData = null;
 
 
-  // reference_id just for test
+  // data should be input from payment service
   var orderId = '123456';
+  var amount = '10';
+  var authorizationCode = 'sandbox_mfw29vzd_mpmfynzxz947hjzd';
+  
+
+  // init
+  document.querySelector('#amount').value = amount;
 
   braintree.client.create({
-    authorization: 'sandbox_mfw29vzd_mpmfynzxz947hjzd'
+    authorization: authorizationCode
   }, function (clientErr, clientInstance) {
     if (clientErr) {
+      $('#error-message').html(clientErr.message);
       console.error(clientErr);
       return;
     }
@@ -300,6 +313,7 @@ Media Queries
       if (err) {
         // Handle error in creation of data collector
         console.error(err);
+        $('#error-message').html(err.message);
         return;
       }
       // At this point, you should access the dataCollectorInstance.deviceData value and provide it
@@ -350,14 +364,20 @@ Media Queries
       }, function (hostedFieldsErr, hostedFieldsInstance) {
         if (hostedFieldsErr) {
           console.error(hostedFieldsErr);
+          $('#error-message').html(hostedFieldsErr.message);
           return;
         }
 
+        submit.removeAttribute('disabled');
+
         form.addEventListener('submit', function (event) {
+          $('#checkout-message').html('');
+          $('#error-message').html('');
           event.preventDefault();
 
           hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
             if (tokenizeErr) {
+              $('#error-message').html(tokenizeErr.message);
               console.error(tokenizeErr);
               return;
             }
@@ -376,16 +396,15 @@ Media Queries
               url: '/submit',
               data: {
                 'paymentMethodNonce': payload.nonce,
-                'amount': document.getElementById('amount').value,
+                'amount': amount,
                 'deviceData': deviceData,
                 'orderId': orderId,
               }
             }).done(function (result) {
               hostedFieldsInstance.teardown(function (teardownErr) {
                 if (teardownErr) {
-                  console.error('Could not tear down Drop-in UI!');
+                  $('#error-message').html('Could not tear down Drop-in UI!');
                 } else {
-                  console.info('Drop-in UI has been tear down!');
                   $('#submit-button').remove();
                 }
               });
@@ -397,10 +416,10 @@ Media Queries
 
               if (result.success) {
                 console.log("authorization success : " + result.transaction.id);
-                $('#checkout-message').html('<h1>Success</h1><p></p><p>Your Drop-in UI is working! Check your <a href="https://sandbox.braintreegateway.com/login">sandbox Control Panel</a> for your test transactions.</p><p>Refresh to try another transaction.</p>');
+                $('#checkout-message').html('<h1>Payment Success</h1><p></p><p>Refresh to try another transaction.</p>');
               } else {
                 console.log(result);
-                $('#checkout-message').html('<h1>Error</h1><p>Check your console.</p>');
+                $('#merror-message').html(result.message);
               }
             });
 
