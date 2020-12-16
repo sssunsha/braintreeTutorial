@@ -66,7 +66,7 @@
             </svg>
           </span>
           Order Id (only for test)</label>
-        <input type="text" id="orderId" class="hosted-field" />
+        <input type="text" id="orderId" class="hosted-field"/>
         <!-- End hosted fields section -->
       </div>
       <div class="textfield--float-label">
@@ -292,14 +292,18 @@ Media Queries
   var orderId = '123456';
   var amount = '10';
   var relayRedirctUrl = "https://example.com/success/123456_1607932548367"
-  var authorizationCode = 'sandbox_mfw29vzd_mpmfynzxz947hjzd';
+  var contentLanguage = 'en-us';
+  var customerSessionID = 'mock-customer-session-id';
+  var tokenizationKey = 'sandbox_mfw29vzd_mpmfynzxz947hjzd';
+  var submitApiUrl = '/submit'
   
 
   // init
+  document.querySelector('#orderId').value = orderId;
   document.querySelector('#amount').value = amount;
 
   braintree.client.create({
-    authorization: authorizationCode
+    authorization: tokenizationKey
   }, function (clientErr, clientInstance) {
     if (clientErr) {
       $('#error-message').html(clientErr.message);
@@ -380,18 +384,36 @@ Media Queries
             }
             // below data should be replace with freemark input
             orderId = document.getElementById('orderId').value || orderId;
+            var customFields = [
+            {
+              'key': 'paymentMethodNonce',
+              'value': payload.nonce
+            },
+            {
+              'key': 'deviceData',
+              'value': deviceData
+            }];
 
-            $.ajax({
-              type: 'POST',
-              url: '/submit',
-              data: {
-                'encryptedToken': payload.nonce,
+            var submitBody = {
+                'paymentMethod': 'CREDIT_CARD',
                 'channel': 'BROWSER',
                 // this property is only used for local test
                 'amount': amount,
-                'deviceData': deviceData,
                 'orderId': orderId,
+                'customFields': customFields
               }
+            
+
+            $.ajax({
+              type: 'POST',
+              dataType: 'json',
+              contentType: 'application/json; charset=utf-8',
+              url: submitApiUrl,
+              headers: {
+                'Content-Language': contentLanguage,
+                'customer-session-id': customerSessionID
+              },
+              data: JSON.stringify(submitBody)
             }).done(function (result) {
               hostedFieldsInstance.teardown(function (teardownErr) {
                 if (teardownErr) {

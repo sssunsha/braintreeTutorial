@@ -15,9 +15,9 @@ router.post('/', function(req, res, next) {
   });
 
   // Use the payment method nonce here
-  var nonceFromTheClient = req.body.encryptedToken;
+  var nonceFromTheClient = req.body.customFields[0].value;
   var amountFromTheClient = req.body.amount;
-  var deviceDataFromTheClient = req.body.deviceData;
+  var deviceDataFromTheClient = req.body.customFields[1].value;
   var orderIdFromClient = req.body.orderId;
   // Create a new transaction for $10
   var newTransaction = gateway.transaction.sale({
