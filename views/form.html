@@ -57,20 +57,6 @@
             </div>
             <div class="textfield--float-label">
                 <!-- Begin hosted fields section -->
-                <label class="hosted-field--label" for="orderId">
-                    <span class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-cart-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
-                        </svg>
-                    </span>
-                    Order Id (only for test)</label>
-                <input type="text" id="orderId" class="hosted-field" />
-                <!-- End hosted fields section -->
-            </div>
-            <div class="textfield--float-label">
-                <!-- Begin hosted fields section -->
                 <label class="hosted-field--label" for="amount">
                     <span class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
@@ -295,7 +281,7 @@
 
 
     // data should be input from payment service
-    var orderId = ${input.orderId};
+    var orderId = ${input.referenceId};
     var amount = ${input.amount};
     var relayRedirctUrl = "https://gateway-approuter-caas2-sap-test.cfapps.us10.hana.ondemand.com/consumer/payment-service/gateway/relay-redirect/${input.referenceId}"
     var contentLanguage = ${input.languageCode}-${input.countryCode};
@@ -306,7 +292,6 @@
 
 
     // init
-    document.querySelector('#orderId').value = orderId;
     document.querySelector('#amount').value = amount;
 
     braintree.client.create({
@@ -390,7 +375,6 @@
                             return;
                         }
                         // below data should be replace with freemark input
-                        orderId = document.getElementById('orderId').value || orderId;
                         var customFields = [
                             {
                                 'key': 'paymentMethodNonce',
