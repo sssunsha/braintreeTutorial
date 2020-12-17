@@ -281,12 +281,12 @@
 
 
     // data should be input from payment service
-    var orderId = ${input.referenceId};
-    var amount = ${input.amount};
-    var relayRedirctUrl = "https://gateway-approuter-caas2-sap-test.cfapps.us10.hana.ondemand.com/consumer/payment-service/gateway/relay-redirect/${input.referenceId}"
-    var contentLanguage = ${input.languageCode}-${input.countryCode};
-    var customerSessionID = 'mock-customer-session-id';
-    var tokenizationKey = ${vars.tokenizationKey};
+    var orderId = '${input.referenceId}';
+    var amount = '${input.amount}';
+    var relayRedirctUrl = 'https://gateway-approuter-caas2-sap-test.cfapps.us10.hana.ondemand.com/consumer/payment-service/gateway/relay-redirect/${input.referenceId}';
+    var contentLanguage = '${input.languageCode}-${input.countryCode}';
+    var customerSessionID = '';
+    var tokenizationKey = '${vars.tokenizationKey}';
     var submitApiUrl = 'https://gateway-approuter-caas2-sap-test.cfapps.us10.hana.ondemand.com/consumer/payment-service/gateway/submit';
 
 
