@@ -1,3 +1,8 @@
+<script src="https://js.braintreegateway.com/web/3.69.0/js/client.min.js"></script>
+<script src="https://js.braintreegateway.com/web/3.69.0/js/data-collector.min.js"></script>
+<script src="https://js.braintreegateway.com/web/3.69.0/js/hosted-fields.min.js"></script>
+<!-- includes jQuery -->
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
 <form action="/checkout" id="cardForm" method="post">
     <div class="panel">
         <header class="panel__header">
@@ -267,14 +272,8 @@
         }
     }
 </style>
-<script src="https://js.braintreegateway.com/web/3.69.0/js/client.min.js"></script>
-<script src="https://js.braintreegateway.com/web/3.69.0/js/data-collector.min.js"></script>
-<script src="https://js.braintreegateway.com/web/3.69.0/js/hosted-fields.min.js"></script>
-
-
-<!-- includes jQuery -->
-<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
 <script>
+    console.log('start run hosted fields script ...');
     var form = document.querySelector('#cardForm');
     var submit = document.querySelector('input[type="submit"]');
     var deviceData = null;
@@ -283,11 +282,11 @@
     // data should be input from payment service
     var orderId = '${input.referenceId}';
     var amount = '${input.amount}';
-    var relayRedirctUrl = 'https://gateway-approuter-caas2-sap-test.cfapps.us10.hana.ondemand.com/consumer/payment-service/gateway/relay-redirect/${input.referenceId}';
+    var relayRedirctUrl = '${input.redirectUrl}';
     var contentLanguage = '${input.languageCode}-${input.countryCode}';
     var customerSessionID = '';
     var tokenizationKey = '${vars.tokenizationKey}';
-    var submitApiUrl = 'https://gateway-approuter-caas2-sap-test.cfapps.us10.hana.ondemand.com/consumer/payment-service/gateway/submit';
+    var submitApiUrl = '${input.submitURL}';
 
 
 
@@ -431,6 +430,4 @@
             });
         });
     });
-
-
 </script>
