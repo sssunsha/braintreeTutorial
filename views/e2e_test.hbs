@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Brain tree e2e test hosted fields</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+    <script src="/e2e-test-client.js"></script>
+  </head>
+  <body class="e2e-body">
+    <div>
+      <form id="e2e-form">
+        <label>Order id: </label>
+        <p></p>
+        <input type="text" id="e2e-orderId">
+        <p></p>
+        <label>customer session id: </label>
+        <p></p>
+        <input type="text" id="e2e-customerSessionId">
+        <p></p>
+        <input type="submit" id="e2e-start" value="start">
+      </form>
+    </div>
+    <div>
+      <iframe id="iframe" width="600" height="900" />
+    </div>
+  </body>
+</html>

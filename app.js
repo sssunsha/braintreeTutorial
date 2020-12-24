@@ -7,6 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var formRouter = require('./routes/form');
 var usersRouter = require('./routes/users');
+var e2eTestRouter = require('./routes/e2e_test');
 
 var app = express();
 
@@ -29,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/form', formRouter);
 app.use('/users', usersRouter);
+app.use('/e2e', e2eTestRouter);
 // The checkout route
 var checkout = require('./routes/checkout');
 app.use('/submit', checkout);
