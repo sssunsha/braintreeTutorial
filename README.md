@@ -3,10 +3,18 @@
 ## How to use:
 1. npm install
 2. npm start
-3. visit localhost:3000 on your browser
-4. input card number, etc. and click `pay`
-5. F12 to check the network and if succes, in the browser console will print the transaction id, then you can check it in the Braintree cli
+
+### for normal usage, do the authorziation without upscale Payment service
+1. visit localhost:3000 on your browser
+2. input card number, etc. and click `pay`
+3. F12 to check the network and if succes, in the browser console will print the transaction id, then you can check it in the Braintree cli
 https://sandbox.braintreegateway.com/login
+
+### for e2e test, do the authorization with upscale payment service
+1. visist localhost:3000/e2e
+2. input the order id and customer session id which created during you created order (now only support anonymous use mode, please first create a order on Gateway tenant and with brainTree hosted fileds pattern)
+3. click start
+4. check the ahourization status
 
 
 if you wish to catch the requests
