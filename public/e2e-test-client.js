@@ -75,10 +75,14 @@ window.onload = function () {
                     // });
 
                     // then render html
-                    var ifrdoc = iframe.contentWindow.document;
-                    ifrdoc.open();
-                    ifrdoc.write(result.dynamicScript.html);
-                    ifrdoc.close();
+                    // var ifrdoc = iframe.contentWindow.document;
+                    // ifrdoc.open();
+                    // ifrdoc.write(result.dynamicScript.html);
+                    // ifrdoc.close();
+
+                    var htmlSrcUrl = window.URL.createObjectURL(new Blob([result.dynamicScript.html], {type: 'text/html;charset=utf-8'}))
+                    console.log(htmlSrcUrl);
+                    iframe.src = htmlSrcUrl;
                 }
             });
         }
