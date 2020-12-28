@@ -2,6 +2,7 @@ window.onload = function () {
     var form = $('#e2e-form');
     var orderId = document.querySelector('#e2e-orderId');
     var customerSessionId = document.querySelector('#e2e-customerSessionId');
+    var jwtToken = document.querySelector('#jwt-token');
     var iframe = document.querySelector('#iframe');
 
     form.submit(function (event) {
@@ -48,6 +49,7 @@ window.onload = function () {
                 url: 'https://gateway-approuter-caas2-sap-test.cfapps.us10.hana.ondemand.com/consumer/payment-service/gateway/initiate',
                 headers: {
                     'Customer-session-id': customerSessionId.value,
+                    'Authorization': jwtToken.value,
                     'Content-Language': 'en-us'
                 },
                 data: JSON.stringify(requestBody)
