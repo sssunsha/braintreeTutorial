@@ -1,8 +1,7 @@
-<script src="https://js.braintreegateway.com/web/3.69.0/js/client.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
 <script src="https://js.braintreegateway.com/web/3.69.0/js/data-collector.min.js"></script>
 <script src="https://js.braintreegateway.com/web/3.69.0/js/hosted-fields.min.js"></script>
-<!-- includes jQuery -->
-<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+<script src="https://js.braintreegateway.com/web/3.69.0/js/client.min.js"></script>
 <form action="/checkout" id="cardForm" method="post">
     <div class="panel">
         <header class="panel__header">
@@ -280,14 +279,15 @@
 
 
     // data should be input from payment service
-    var orderId = '${input.referenceId}';
+    var orderId = '${input.orderId}';
     var amount = '${input.amount}';
-    var relayRedirctUrl = '${input.redirectUrl}';
+    var resultURL = '${input.resultURL}';
     var contentLanguage = '${input.languageCode}-${input.countryCode}';
-    var customerSessionID = '';
     var tokenizationKey = '${vars.tokenizationKey}';
     var submitApiUrl = '${input.submitURL}';
-
+    // only for local test
+    var authorization = localStorage.getItem('Authorization') || '';
+    var customerSessionId = localStorage.getItem('Customer-session-id') || '';
 
 
     // init
@@ -401,8 +401,13 @@
                             url: submitApiUrl,
                             headers: {
                                 'Content-Language': contentLanguage,
-                                'customer-session-id': customerSessionID
+                                'Authorization': authorization,
+                                'Customer-session-id': customerSessionId
                             },
+                            // xhrFields: {
+                            //     withCredentials: true
+                            // },
+                            // crossDomain: true,
                             data: JSON.stringify(submitBody)
                         }).done(function (result) {
                             hostedFieldsInstance.teardown(function (teardownErr) {
@@ -415,13 +420,13 @@
 
                             dataCollectorInstance.teardown(function () { });
 
-                            if (result.success) {
-                                console.log("authorization success : " + result.transaction.id);
+                            if (result.status == 'ACCEPTED') {
+                                console.log("authorization success : " + result.orderId);
                                 $('#checkout-message').html('<h1>Payment Success</h1><p></p><p>Refresh to try another transaction.</p>');
-                                top.location.href = relayRedirctUrl;
+                                top.location.href = resultURL;
                             } else {
                                 $('#merror-message').html(result.message);
-                                top.location.href = relayRedirctUrl;
+                                // TODO: alert authorization error status and message
                             }
                         });
 
