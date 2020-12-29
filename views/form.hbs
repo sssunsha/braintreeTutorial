@@ -433,10 +433,8 @@ Media Queries
               if (result.success) {
                 console.log("authorization success : " + result.transaction.id);
                 $('#checkout-message').html('<h1>Payment Success</h1><p></p><p>Refresh to try another transaction.</p>');
-                top.location.href = relayRedirctUrl;
               } else {
                 $('#merror-message').html(result.message);
-                top.location.href = relayRedirctUrl;
               }
             });
 
