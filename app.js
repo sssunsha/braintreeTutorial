@@ -32,6 +32,8 @@ app.use('/users', usersRouter);
 // The checkout route
 var checkout = require('./routes/checkout');
 app.use('/submit', checkout);
+var treeDSToken = require('./routes/client_token');
+app.use('/client_token', treeDSToken);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

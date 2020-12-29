@@ -294,6 +294,11 @@ Media Queries
   var relayRedirctUrl = "https://example.com/success/123456_1607932548367"
   var authorizationCode = 'sandbox_mfw29vzd_mpmfynzxz947hjzd';
 
+  var clientToken = null;
+  var threeDSecureAuthenticationId = null;
+  var liabilityShiftPossible = false;
+  var liabilityShifted = false;
+
   var threeDSecureParameters = {
     amount: '',
     nonce: '', // Example: hostedFieldsTokenizationPayload.nonce
@@ -326,6 +331,8 @@ Media Queries
     },
     onLookupComplete: function (data, next) {
       // use `data` here, then call `next()`
+      console.log("onLookupComplete :");
+      console.log(data);
       next();
     }
   };
@@ -334,148 +341,174 @@ Media Queries
   // init
   document.querySelector('#amount').value = amount;
 
-  braintree.client.create({
-    authorization: authorizationCode
-  }, function (clientErr, clientInstance) {
-    if (clientErr) {
-      $('#error-message').html(clientErr.message);
-      return;
-    }
+  // first get the client token for 3ds
+  $.ajax({
+    type: 'GET',
+    url: 'client_token'
+  }).done(function (result) {
+    if (result.success) {
+      clientToken = result.clientToken;
 
-    // This example for device data collection
-    braintree.dataCollector.create({
-      client: clientInstance
-    }, function (err, dataCollectorInstance) {
-      if (err) {
-        // Handle error in creation of data collector
-        $('#error-message').html(err.message);
-        return;
-      }
-      // At this point, you should access the dataCollectorInstance.deviceData value and provide it
-      // to your server, e.g. by injecting it into your form as a hidden input.
-      deviceData = dataCollectorInstance.deviceData;
-
-      // This example shows Hosted Fields, but you can also use this
-      // client instance to create additional components here, such as
-      // PayPal or Data Collector.
-      braintree.hostedFields.create({
-        client: clientInstance,
-        styles: {
-          'input': {
-            'font-size': '14px'
-          },
-          'input.invalid': {
-            'color': 'red'
-          },
-          'input.valid': {
-            'color': 'green'
-          },
-          'input::placeholder': {
-            'opacity': '0.3'
-          },
-          ':focus': {
-            'color': '#333333'
-          }
-        },
-        fields: {
-          number: {
-            selector: '#card-number',
-            placeholder: ''
-          },
-          cvv: {
-            selector: '#cvv',
-            placeholder: ''
-          },
-          expirationDate: {
-            selector: '#expiration-date',
-            placeholder: 'mm/yyyy'
-          },
-          postalCode: {
-            selector: '#postal-code',
-            placeholder: ''
-          }
-        }
-      }, function (hostedFieldsErr, hostedFieldsInstance) {
-        if (hostedFieldsErr) {
-          $('#error-message').html(hostedFieldsErr.message);
+      braintree.client.create({
+        authorization: clientToken
+      }, function (clientErr, clientInstance) {
+        if (clientErr) {
+          $('#error-message').html(clientErr.message);
+          console.error(err);
           return;
         }
 
-        submit.removeAttribute('disabled');
+        // This example for device data collection
+        braintree.dataCollector.create({
+          client: clientInstance
+        }, function (err, dataCollectorInstance) {
+          if (err) {
+            // Handle error in creation of data collector
+            $('#error-message').html(err.message);
+            console.error(err);
+            return;
+          }
+          // At this point, you should access the dataCollectorInstance.deviceData value and provide it
+          // to your server, e.g. by injecting it into your form as a hidden input.
+          deviceData = dataCollectorInstance.deviceData;
 
-        form.addEventListener('submit', function (event) {
-          $('#checkout-message').html('');
-          $('#error-message').html('');
-          event.preventDefault();
-
-          hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
-            if (tokenizeErr) {
-              $('#error-message').html(tokenizeErr.message);
+          // This example shows Hosted Fields, but you can also use this
+          // client instance to create additional components here, such as
+          // PayPal or Data Collector.
+          braintree.hostedFields.create({
+            client: clientInstance,
+            styles: {
+              'input': {
+                'font-size': '14px'
+              },
+              'input.invalid': {
+                'color': 'red'
+              },
+              'input.valid': {
+                'color': 'green'
+              },
+              'input::placeholder': {
+                'opacity': '0.3'
+              },
+              ':focus': {
+                'color': '#333333'
+              }
+            },
+            fields: {
+              number: {
+                selector: '#card-number',
+                placeholder: ''
+              },
+              cvv: {
+                selector: '#cvv',
+                placeholder: ''
+              },
+              expirationDate: {
+                selector: '#expiration-date',
+                placeholder: 'mm/yyyy'
+              },
+              postalCode: {
+                selector: '#postal-code',
+                placeholder: ''
+              }
+            }
+          }, function (hostedFieldsErr, hostedFieldsInstance) {
+            if (hostedFieldsErr) {
+              $('#error-message').html(hostedFieldsErr.message);
+              console.error(err);
               return;
             }
 
-            // for 3ds
-            braintree.threeDSecure.create({
-              version: 2, // Will use 3DS 2 whenever possible
-              client: clientInstance
-            }, function (threeDSecureErr, threeDSecureInstance) {
-              if (threeDSecureErr) {
-                // Handle error in 3D Secure component creation
-                $('#error-message').html(threeDSecureErr.message);
-                return;
-              }
+            submit.removeAttribute('disabled');
 
-              threeDSecure = threeDSecureInstance;
-              threeDSecureParameters.nonce = payload.nonce;
-              threeDSecureParameters.bin = payload.details.bin;
-              threeDSecureParameters.amount = amount;
+            form.addEventListener('submit', function (event) {
+              $('#checkout-message').html('');
+              $('#error-message').html('');
+              event.preventDefault();
 
-              threeDSecure.verifyCard(threeDSecureParameters, function (err, response) {
-                // Handle response
-                if (err) {
-                  $('#error-message').html(err.message);
+              hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
+                if (tokenizeErr) {
+                  $('#error-message').html(tokenizeErr.message);
+                  console.error(err);
                   return;
                 }
+
+                // for 3ds
+                braintree.threeDSecure.create({
+                  version: 2, // Will use 3DS 2 whenever possible
+                  client: clientInstance
+                }, function (threeDSecureErr, threeDSecureInstance) {
+                  if (threeDSecureErr) {
+                    // Handle error in 3D Secure component creation
+                    $('#error-message').html(threeDSecureErr.message);
+                    console.error(err);
+                    return;
+                  }
+
+                  threeDSecure = threeDSecureInstance;
+                  threeDSecureParameters.nonce = payload.nonce;
+                  threeDSecureParameters.bin = payload.details.bin;
+                  threeDSecureParameters.amount = amount;
+
+                  threeDSecure.verifyCard(threeDSecureParameters, function (err, response) {
+                    // Handle response
+                    if (err) {
+                      $('#error-message').html(err.message);
+                      console.error(err);
+                      return;
+                    }
+                    console.log("verifyCard :");
+                    console.log(response);
+                    threeDSecureAuthenticationId = response.threeDSecureInfo.threeDSecureAuthenticationId;
+                    liabilityShifted = response.threeDSecureInfo.liabilityShifted;
+                    liabilityShiftPossible = response.threeDSecureInfo.liabilityShiftPossible;
+                    if (liabilityShifted) {
+
+                      $.ajax({
+                        type: 'POST',
+                        url: '/submit',
+                        data: {
+                          'encryptedToken': response.nonce,
+                          'channel': 'BROWSER',
+                          // this property is only used for local test
+                          'amount': amount,
+                          'deviceData': deviceData,
+                          'orderId': orderId,
+                        }
+                      }).done(function (result) {
+                        hostedFieldsInstance.teardown(function (teardownErr) {
+                          if (teardownErr) {
+                            $('#error-message').html('Could not tear down Drop-in UI!');
+                          } else {
+                            $('#submit-button').remove();
+                          }
+                        });
+
+                        dataCollectorInstance.teardown(function () { });
+
+                        if (result.success) {
+                          console.log("authorization success : " + result.transaction.id);
+                          $('#checkout-message').html('<h1>Payment Success</h1><p></p><p>Refresh to try another transaction.</p>');
+                        } else {
+                          $('#merror-message').html(result.message);
+                          console.error(err);
+                        }
+                      });
+
+                    } else if (liabilityShiftPossible) {
+
+                    } else {
+
+                    }
+                  });
+                });
               });
-            });
-
-            $.ajax({
-              type: 'POST',
-              url: '/submit',
-              data: {
-                'encryptedToken': payload.nonce,
-                'channel': 'BROWSER',
-                // this property is only used for local test
-                'amount': amount,
-                'deviceData': deviceData,
-                'orderId': orderId,
-              }
-            }).done(function (result) {
-              hostedFieldsInstance.teardown(function (teardownErr) {
-                if (teardownErr) {
-                  $('#error-message').html('Could not tear down Drop-in UI!');
-                } else {
-                  $('#submit-button').remove();
-                }
-              });
-
-              dataCollectorInstance.teardown(function () { });
-
-              if (result.success) {
-                console.log("authorization success : " + result.transaction.id);
-                $('#checkout-message').html('<h1>Payment Success</h1><p></p><p>Refresh to try another transaction.</p>');
-                top.location.href = relayRedirctUrl;
-              } else {
-                $('#merror-message').html(result.message);
-                top.location.href = relayRedirctUrl;
-              }
-            });
-
+            }, false);
           });
-        }, false);
+        });
       });
-    });
+    } else {
+      $('#merror-message').html(result.message);
+    }
   });
-
-
 </script>
