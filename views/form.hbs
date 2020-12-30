@@ -287,7 +287,6 @@ Media Queries
   var submit = document.querySelector('input[type="submit"]');
   var deviceData = null;
 
-
   // data should be input from payment service
   var orderId = '123456';
   var amount = '10';
@@ -304,7 +303,6 @@ Media Queries
     nonce: '', // Example: hostedFieldsTokenizationPayload.nonce
     bin: '', // Example: hostedFieldsTokenizationPayload.details.bin
     challengeRequested: true,
-    exemptionRequested: false,
     email: '',
     billingAddress: {
       givenName: '', // ASCII-printable characters required, else will throw a validation error
@@ -339,7 +337,84 @@ Media Queries
     }
   };
 
+  function startSubmit(hostedFieldsInstance, dataCollectorInstance, threeDSecureInstance, nonce) {
+    $.ajax({
+      type: 'POST',
+      url: '/submit',
+      data: {
+        'encryptedToken': nonce,
+        'channel': 'BROWSER',
+        // this property is only used for local test
+        'amount': amount,
+        'deviceData': deviceData,
+        'orderId': orderId,
+      }
+    }).done(function (result) {
+      hostedFieldsInstance.teardown(function () {});
+      dataCollectorInstance.teardown(function () { });
+      threeDSecureInstance.teardown(function () { });
 
+      if (result.success) {
+        console.log("authorization success : " + result.transaction.id);
+        $('#checkout-message').html('<h1>Payment Success</h1><p></p><p>Refresh to try another transaction.</p>');
+      } else {
+        $('#merror-message').html(result.message);
+        console.error(err);
+      }
+    });
+  }
+
+  function startTokenize(clientInstance, hostedFieldsInstance, dataCollectorInstance) {
+    hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
+      if (tokenizeErr) {
+        $('#error-message').html(tokenizeErr.message);
+        console.error(err);
+        return;
+      }
+
+      // for 3ds
+      braintree.threeDSecure.create({
+        version: 2, // Will use 3DS 2 whenever possible
+        client: clientInstance
+      }, function (threeDSecureErr, threeDSecureInstance) {
+        if (threeDSecureErr) {
+          // Handle error in 3D Secure component creation
+          $('#error-message').html(threeDSecureErr.message);
+          console.error(err);
+          return;
+        }
+
+        threeDSecureParameters.nonce = payload.nonce;
+        threeDSecureParameters.bin = payload.details.bin;
+        threeDSecureParameters.amount = amount;
+
+        threeDSecureInstance.verifyCard(threeDSecureParameters, function (err, response) {
+          // Handle response
+          if (err) {
+            $('#error-message').html(err.message);
+            console.error(err);
+            return;
+          }
+          console.log("verifyCard :");
+          console.log(response);
+          threeDSecureAuthenticationId = response.threeDSecureInfo.threeDSecureAuthenticationId;
+          liabilityShifted = response.threeDSecureInfo.liabilityShifted;
+          liabilityShiftPossible = response.threeDSecureInfo.liabilityShiftPossible;
+          console.log('liabilityShifted = ' + liabilityShifted + ' liabilityShiftPossible = ' + liabilityShiftPossible);
+          if (liabilityShifted) {
+            startSubmit(hostedFieldsInstance, dataCollectorInstance, threeDSecureInstance, response.nonce);
+
+          } else if (liabilityShiftPossible) {
+
+          } else {
+
+          }
+        });
+      });
+    });
+
+  }
+  
   // init
   document.querySelector('#amount').value = amount;
 
@@ -428,85 +503,7 @@ Media Queries
               $('#error-message').html('');
               event.preventDefault();
 
-              hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
-                if (tokenizeErr) {
-                  $('#error-message').html(tokenizeErr.message);
-                  console.error(err);
-                  return;
-                }
-
-                // for 3ds
-                braintree.threeDSecure.create({
-                  version: 2, // Will use 3DS 2 whenever possible
-                  client: clientInstance
-                }, function (threeDSecureErr, threeDSecureInstance) {
-                  if (threeDSecureErr) {
-                    // Handle error in 3D Secure component creation
-                    $('#error-message').html(threeDSecureErr.message);
-                    console.error(err);
-                    return;
-                  }
-
-                  threeDSecure = threeDSecureInstance;
-                  threeDSecureParameters.nonce = payload.nonce;
-                  threeDSecureParameters.bin = payload.details.bin;
-                  threeDSecureParameters.amount = amount;
-
-                  threeDSecure.verifyCard(threeDSecureParameters, function (err, response) {
-                    // Handle response
-                    if (err) {
-                      $('#error-message').html(err.message);
-                      console.error(err);
-                      return;
-                    }
-                    console.log("verifyCard :");
-                    console.log(response);
-                    threeDSecureAuthenticationId = response.threeDSecureInfo.threeDSecureAuthenticationId;
-                    liabilityShifted = response.threeDSecureInfo.liabilityShifted;
-                    liabilityShiftPossible = response.threeDSecureInfo.liabilityShiftPossible;
-                    console.log('liabilityShifted = ' + liabilityShifted + ' liabilityShiftPossible = ' + liabilityShiftPossible);
-                    if (liabilityShifted) {
-
-                      $.ajax({
-                        type: 'POST',
-                        url: '/submit',
-                        data: {
-                          'encryptedToken': response.nonce,
-                          'channel': 'BROWSER',
-                          // this property is only used for local test
-                          'amount': amount,
-                          'deviceData': deviceData,
-                          'orderId': orderId,
-                        }
-                      }).done(function (result) {
-                        hostedFieldsInstance.teardown(function (teardownErr) {
-                          if (teardownErr) {
-                            $('#error-message').html('Could not tear down Drop-in UI!');
-                          } else {
-                            $('#submit-button').remove();
-                          }
-                        });
-
-                        dataCollectorInstance.teardown(function () { });
-                        threeDSecureInstance.teardown(function() {});
-
-                        if (result.success) {
-                          console.log("authorization success : " + result.transaction.id);
-                          $('#checkout-message').html('<h1>Payment Success</h1><p></p><p>Refresh to try another transaction.</p>');
-                        } else {
-                          $('#merror-message').html(result.message);
-                          console.error(err);
-                        }
-                      });
-
-                    } else if (liabilityShiftPossible) {
-
-                    } else {
-
-                    }
-                  });
-                });
-              });
+              startTokenize(clientInstance, hostedFieldsInstance, dataCollectorInstance);
             }, false);
           });
         });
