@@ -303,6 +303,8 @@ Media Queries
     amount: '',
     nonce: '', // Example: hostedFieldsTokenizationPayload.nonce
     bin: '', // Example: hostedFieldsTokenizationPayload.details.bin
+    challengeRequested: true,
+    exemptionRequested: false,
     email: '',
     billingAddress: {
       givenName: '', // ASCII-printable characters required, else will throw a validation error
@@ -462,6 +464,7 @@ Media Queries
                     threeDSecureAuthenticationId = response.threeDSecureInfo.threeDSecureAuthenticationId;
                     liabilityShifted = response.threeDSecureInfo.liabilityShifted;
                     liabilityShiftPossible = response.threeDSecureInfo.liabilityShiftPossible;
+                    console.log('liabilityShifted = ' + liabilityShifted + ' liabilityShiftPossible = ' + liabilityShiftPossible);
                     if (liabilityShifted) {
 
                       $.ajax({
@@ -485,6 +488,7 @@ Media Queries
                         });
 
                         dataCollectorInstance.teardown(function () { });
+                        threeDSecureInstance.teardown(function() {});
 
                         if (result.success) {
                           console.log("authorization success : " + result.transaction.id);
