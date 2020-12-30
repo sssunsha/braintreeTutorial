@@ -1,6 +1,7 @@
 <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
 <script src="https://js.braintreegateway.com/web/3.69.0/js/data-collector.min.js"></script>
 <script src="https://js.braintreegateway.com/web/3.69.0/js/hosted-fields.min.js"></script>
+<script src="https://js.braintreegateway.com/web/3.69.0/js/three-d-secure.min.js"></script>
 <script src="https://js.braintreegateway.com/web/3.69.0/js/client.min.js"></script>
 <form action="/checkout" id="cardForm" method="post">
     <div class="panel">
@@ -285,22 +286,163 @@
     var contentLanguage = '${input.languageCode}-${input.countryCode}';
     var tokenizationKey = '${vars.tokenizationKey}';
     var submitApiUrl = '${input.submitURL}';
+    var clientToken = '${input.customFields.clientToken}';
     // only for local test
     var authorization = localStorage.getItem('Authorization') || '';
     var customerSessionId = localStorage.getItem('Customer-session-id') || '';
 
+    var threeDSecureParameters = {
+        amount: '',
+        nonce: '', // Example: hostedFieldsTokenizationPayload.nonce
+        bin: '', // Example: hostedFieldsTokenizationPayload.details.bin
+        challengeRequested: true,
+        email: '${input.emailAddress}',
+        mobilePhoneNumber: '${input.phoneNumber}',
+        billingAddress: {
+            givenName: '${input.billingAddress.firstName}', // ASCII-printable characters required, else will throw a validation error
+            surname: '${input.billingAddress.lastName}', // ASCII-printable characters required, else will throw a validation error
+            phoneNumber: '${input.billingAddress.phoneNumber}',
+            streetAddress: '${input.billingAddress.addressLine1}',
+            extendedAddress: '${input.billingAddress.addressLine2}',
+            line3: '${input.billingAddress.addressLine3}',
+            locality: '${input.billingAddress.city}',
+            region: '',
+            postalCode: '${input.billingAddress.postalCode}',
+            countryCodeAlpha2: ''
+        },
+        additionalInformation: {
+            workPhoneNumber: '',
+            shippingGivenName: '${input.shippingAddress.firstName}',
+            shippingSurname: '${input.shippingAddress.lastName}',
+            shippingPhone: '',
+            shippingAddress: {
+                streetAddress: '${input.shippingAddress.addressLine1}',
+                extendedAddress: '${input.shippingAddress.addressLine2}',
+                line3: '${input.shippingAddress.addressLine3}',
+                locality: '${input.shippingAddress.city}',
+                region: '',
+                postalCode: '${input.shippingAddress.postalCode}',
+                countryCodeAlpha2: ''
+            }
+        },
+        onLookupComplete: function (data, next) {
+            // use `data` here, then call `next()`
+            console.log("onLookupComplete :");
+            console.log(data);
+            next();
+        }
+    };
+
+    function startSubmit(hostedFieldsInstance, dataCollectorInstance, threeDSecureInstance, nonce) {
+        var customFields = [
+            {
+                'key': 'paymentMethodNonce',
+                'value': nonce
+            },
+            {
+                'key': 'deviceData',
+                'value': deviceData
+            }];
+
+        var submitBody = {
+            'paymentMethod': 'CREDIT_CARD',
+            'channel': 'BROWSER',
+            'amount': amount,
+            'orderId': orderId,
+            'customFields': customFields
+        }
+
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            url: submitApiUrl,
+            headers: {
+                'Content-Language': contentLanguage,
+                'Authorization': authorization,
+                'Customer-session-id': customerSessionId
+            },
+            // xhrFields: {
+            //     withCredentials: true
+            // },
+            // crossDomain: true,
+            data: JSON.stringify(submitBody)
+        }).done(function (result) {
+            hostedFieldsInstance.teardown(function () { });
+            dataCollectorInstance.teardown(function () { });
+            threeDSecureInstance.teardown(function () { });
+
+            if (result.status == 'ACCEPTED') {
+                console.log("authorization success : " + result.orderId);
+                $('#checkout-message').html('<h1>Payment Success</h1><p></p><p>Refresh to try another transaction.</p>');
+                top.location.href = resultURL;
+            } else {
+                $('#merror-message').html(result.message);
+                // TODO: alert authorization error status and message
+            }
+        });
+    }
+
+    function startTokenize(clientInstance, hostedFieldsInstance, dataCollectorInstance) {
+        hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
+            if (tokenizeErr) {
+                $('#error-message').html(tokenizeErr.message);
+                console.error(err);
+                return;
+            }
+
+            // for 3ds
+            braintree.threeDSecure.create({
+                version: 2, // Will use 3DS 2 whenever possible
+                client: clientInstance
+            }, function (threeDSecureErr, threeDSecureInstance) {
+                if (threeDSecureErr) {
+                    // Handle error in 3D Secure component creation
+                    $('#error-message').html(threeDSecureErr.message);
+                    console.error(err);
+                    return;
+                }
+
+                threeDSecureParameters.nonce = payload.nonce;
+                threeDSecureParameters.bin = payload.details.bin;
+                threeDSecureParameters.amount = amount;
+
+                threeDSecureInstance.verifyCard(threeDSecureParameters, function (err, response) {
+                    // Handle response
+                    if (err) {
+                        $('#error-message').html(err.message);
+                        console.error(err);
+                        return;
+                    }
+                    console.log("verifyCard :");
+                    console.log(response);
+                    threeDSecureAuthenticationId = response.threeDSecureInfo.threeDSecureAuthenticationId;
+                    liabilityShifted = response.threeDSecureInfo.liabilityShifted;
+                    liabilityShiftPossible = response.threeDSecureInfo.liabilityShiftPossible;
+                    console.log('liabilityShifted = ' + liabilityShifted + ' liabilityShiftPossible = ' + liabilityShiftPossible);
+
+                    if (liabilityShifted) {
+                        startSubmit(hostedFieldsInstance, dataCollectorInstance, threeDSecureInstance, response.nonce);
+                    } else if (liabilityShiftPossible) {
+                        // TODO:: how to handle the case of liabilityShifted = false and liabilityShiftPossible = true
+                    } else {
+                        // TODO:: how to handle the case of liabilityShifted = false and liabilityShiftPossible = false
+                    }
+                });
+            });
+        });
+    }
 
     // init
     document.querySelector('#amount').value = amount;
-
+    // create brainTree client
     braintree.client.create({
-        authorization: tokenizationKey
+        authorization: clientToken
     }, function (clientErr, clientInstance) {
         if (clientErr) {
             $('#error-message').html(clientErr.message);
             return;
         }
-
         // This example for device data collection
         braintree.dataCollector.create({
             client: clientInstance
@@ -360,77 +502,13 @@
                     $('#error-message').html(hostedFieldsErr.message);
                     return;
                 }
-
                 submit.removeAttribute('disabled');
 
                 form.addEventListener('submit', function (event) {
                     $('#checkout-message').html('');
                     $('#error-message').html('');
                     event.preventDefault();
-
-                    hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
-                        if (tokenizeErr) {
-                            $('#error-message').html(tokenizeErr.message);
-                            return;
-                        }
-                        // below data should be replace with freemark input
-                        var customFields = [
-                            {
-                                'key': 'paymentMethodNonce',
-                                'value': payload.nonce
-                            },
-                            {
-                                'key': 'deviceData',
-                                'value': deviceData
-                            }];
-
-                        var submitBody = {
-                            'paymentMethod': 'CREDIT_CARD',
-                            'channel': 'BROWSER',
-                            // this property is only used for local test
-                            'amount': amount,
-                            'orderId': orderId,
-                            'customFields': customFields
-                        }
-
-
-                        $.ajax({
-                            type: 'POST',
-                            dataType: 'json',
-                            contentType: 'application/json; charset=utf-8',
-                            url: submitApiUrl,
-                            headers: {
-                                'Content-Language': contentLanguage,
-                                'Authorization': authorization,
-                                'Customer-session-id': customerSessionId
-                            },
-                            // xhrFields: {
-                            //     withCredentials: true
-                            // },
-                            // crossDomain: true,
-                            data: JSON.stringify(submitBody)
-                        }).done(function (result) {
-                            hostedFieldsInstance.teardown(function (teardownErr) {
-                                if (teardownErr) {
-                                    $('#error-message').html('Could not tear down Drop-in UI!');
-                                } else {
-                                    $('#submit-button').remove();
-                                }
-                            });
-
-                            dataCollectorInstance.teardown(function () { });
-
-                            if (result.status == 'ACCEPTED') {
-                                console.log("authorization success : " + result.orderId);
-                                $('#checkout-message').html('<h1>Payment Success</h1><p></p><p>Refresh to try another transaction.</p>');
-                                top.location.href = resultURL;
-                            } else {
-                                $('#merror-message').html(result.message);
-                                // TODO: alert authorization error status and message
-                            }
-                        });
-
-                    });
+                    startTokenize(clientInstance, hostedFieldsInstance, dataCollectorInstance);
                 }, false);
             });
         });
