@@ -359,7 +359,7 @@ Media Queries
         $('#checkout-message').html('<h1>Payment Success</h1><p></p><p>Refresh to try another transaction.</p>');
       } else {
         $('#merror-message').html(result.message);
-        console.error(err);
+        console.error(result);
       }
     });
   }
@@ -368,7 +368,7 @@ Media Queries
     hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
       if (tokenizeErr) {
         $('#error-message').html(tokenizeErr.message);
-        console.error(err);
+        console.error(tokenizeErr);
         return;
       }
 
@@ -380,7 +380,7 @@ Media Queries
         if (threeDSecureErr) {
           // Handle error in 3D Secure component creation
           $('#error-message').html(threeDSecureErr.message);
-          console.error(err);
+          console.error(threeDSecureErr);
           return;
         }
 
@@ -494,7 +494,7 @@ Media Queries
           }, function (hostedFieldsErr, hostedFieldsInstance) {
             if (hostedFieldsErr) {
               $('#error-message').html(hostedFieldsErr.message);
-              console.error(err);
+              console.error(hostedFieldsErr);
               return;
             }
 
