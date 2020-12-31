@@ -293,14 +293,14 @@
 
     var threeDSecureParameters = {
         amount: '',
-        nonce: '', // Example: hostedFieldsTokenizationPayload.nonce
-        bin: '', // Example: hostedFieldsTokenizationPayload.details.bin
+        nonce: '',
+        bin: '',
         challengeRequested: true,
         email: '${input.emailAddress}',
         mobilePhoneNumber: '${input.phoneNumber}',
         billingAddress: {
-            givenName: '${input.billingAddress.firstName}', // ASCII-printable characters required, else will throw a validation error
-            surname: '${input.billingAddress.lastName}', // ASCII-printable characters required, else will throw a validation error
+            givenName: '${input.billingAddress.firstName}',
+            surname: '${input.billingAddress.lastName}',
             phoneNumber: '${input.billingAddress.phoneNumber}',
             streetAddress: '${input.billingAddress.addressLine1}',
             extendedAddress: '${input.billingAddress.addressLine2}',
@@ -452,13 +452,7 @@
                 $('#error-message').html(err.message);
                 return;
             }
-            // At this point, you should access the dataCollectorInstance.deviceData value and provide it
-            // to your server, e.g. by injecting it into your form as a hidden input.
             deviceData = dataCollectorInstance.deviceData;
-
-            // This example shows Hosted Fields, but you can also use this
-            // client instance to create additional components here, such as
-            // PayPal or Data Collector.
 
             braintree.hostedFields.create({
                 client: clientInstance,
