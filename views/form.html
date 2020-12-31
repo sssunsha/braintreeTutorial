@@ -387,7 +387,7 @@
         hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
             if (tokenizeErr) {
                 $('#error-message').html(tokenizeErr.message);
-                console.error(err);
+                console.error(tokenizeErr);
                 return;
             }
 
@@ -399,7 +399,7 @@
                 if (threeDSecureErr) {
                     // Handle error in 3D Secure component creation
                     $('#error-message').html(threeDSecureErr.message);
-                    console.error(err);
+                    console.error(threeDSecureErr);
                     return;
                 }
 
