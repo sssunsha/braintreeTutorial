@@ -288,8 +288,8 @@
     var submitApiUrl = '${input.submitURL}';
     var clientToken = '${input.customFields.clientToken}';
     // only for local test
-    var authorization = localStorage.getItem('Authorization') || '';
-    var customerSessionId = localStorage.getItem('Customer-session-id') || '';
+    var authorization = localStorage.getItem('o-auth-token') || localStorage.getItem('Authorization') || '';
+    var customerSessionId = localStorage.getItem('guest-customer-session-id') || localStorage.getItem('Customer-session-id') || '';
 
     var threeDSecureParameters = {
         amount: '',
@@ -362,10 +362,10 @@
                 'Authorization': authorization,
                 'Customer-session-id': customerSessionId
             },
-            // xhrFields: {
-            //     withCredentials: true
-            // },
-            // crossDomain: true,
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true,
             data: JSON.stringify(submitBody)
         }).done(function (result) {
             hostedFieldsInstance.teardown(function () { });

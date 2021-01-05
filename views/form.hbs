@@ -71,7 +71,7 @@
             </svg>
           </span>
           Order Id (only for test)</label>
-        <input type="text" id="orderId" class="hosted-field"/>
+        <input type="text" id="orderId" class="hosted-field" />
         <!-- End hosted fields section -->
       </div>
       <div class="textfield--float-label">
@@ -85,14 +85,14 @@
             </svg>
           </span>
           Amount</label>
-        <input type="text" id="amount" class="hosted-field" readonly/>
+        <input type="text" id="amount" class="hosted-field" readonly />
         <!-- End hosted fields section -->
       </div>
       <div id="checkout-message"></div>
       <div id="error-message"></div>
     </div>
     <footer class="panel__footer">
-      <input type="submit" value="Pay" class="pay-button" id="submit-button" disabled/>
+      <input type="submit" value="Pay" class="pay-button" id="submit-button" disabled />
     </footer>
   </div>
 </form>
@@ -301,7 +301,7 @@ Media Queries
   var customerSessionID = 'mock-customer-session-id';
   var tokenizationKey = 'sandbox_mfw29vzd_mpmfynzxz947hjzd';
   var submitApiUrl = '/submit'
-  
+
 
   // init
   document.querySelector('#orderId').value = orderId;
@@ -390,24 +390,24 @@ Media Queries
             // below data should be replace with freemark input
             orderId = document.getElementById('orderId').value || orderId;
             var customFields = [
-            {
-              'key': 'paymentMethodNonce',
-              'value': payload.nonce
-            },
-            {
-              'key': 'deviceData',
-              'value': deviceData
-            }];
+              {
+                'key': 'paymentMethodNonce',
+                'value': payload.nonce
+              },
+              {
+                'key': 'deviceData',
+                'value': deviceData
+              }];
 
             var submitBody = {
-                'paymentMethod': 'CREDIT_CARD',
-                'channel': 'BROWSER',
-                // this property is only used for local test
-                'amount': amount,
-                'orderId': orderId,
-                'customFields': customFields
-              }
-            
+              'paymentMethod': 'CREDIT_CARD',
+              'channel': 'BROWSER',
+              // this property is only used for local test
+              'amount': amount,
+              'orderId': orderId,
+              'customFields': customFields
+            }
+
 
             $.ajax({
               type: 'POST',
@@ -418,6 +418,10 @@ Media Queries
                 'Content-Language': contentLanguage,
                 'customer-session-id': customerSessionID
               },
+              xhrFields: {
+                withCredentials: true
+              },
+              crossDomain: true,
               data: JSON.stringify(submitBody)
             }).done(function (result) {
               hostedFieldsInstance.teardown(function (teardownErr) {
@@ -428,7 +432,7 @@ Media Queries
                 }
               });
 
-              dataCollectorInstance.teardown(function () {});
+              dataCollectorInstance.teardown(function () { });
 
               if (result.success) {
                 console.log("authorization success : " + result.transaction.id);
