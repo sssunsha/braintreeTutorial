@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('form', { title: 'Express' });
+  res.render('drop-in', { title: 'BrainTree drop-in demo' });
 });
 
 module.exports = router;

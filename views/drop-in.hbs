@@ -1,0 +1,170 @@
+<script src="https://js.braintreegateway.com/web/dropin/1.25.0/js/dropin.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+
+<div id="dropin-wrapper">
+  <div id="checkout-message"></div>
+  <div id="dropin-container"></div>
+  <button id="submit-button">pay</button>
+</div>
+<style>
+  #submit-button {
+    background-color: #0a6ed1;
+    color: white;
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+    border-radius: 4px;
+  }
+</style>
+<script>
+  var button = document.querySelector('#submit-button');
+  var tokenizationKey = 'sandbox_mfw29vzd_mpmfynzxz947hjzd';
+
+  var clientToken = '' || '${input.customFields.clientToken}';
+  var orderId = '9527' || '${input.orderId}';
+  var amount = '99' || '${input.amount}';
+  var resultURL = 'https://example.com/success' || '${input.resultURL}';
+  var submitApiUrl = '/submit' || '${input.submitURL}';
+  var authorization = localStorage.getItem('o-auth-token') || localStorage.getItem('Authorization') || '';
+  var customerSessionId = localStorage.getItem('guest-customer-session-id') || localStorage.getItem('Customer-session-id') || '';
+  var locale = 'en-US';
+
+  var threeDSecureParameters = {
+    amount: '',
+    email: '',
+    billingAddress: {
+      givenName: '',
+      surname: '',
+      phoneNumber: '',
+      streetAddress: '',
+      extendedAddress: '',
+      line3: '',
+      locality: '',
+      region: '',
+      postalCode: '',
+      countryCodeAlpha2: ''
+    },
+    additionalInformation: {
+      workPhoneNumber: '',
+      shippingGivenName: '',
+      shippingSurname: '',
+      shippingPhone: '',
+      shippingAddress: {
+        streetAddress: '',
+        extendedAddress: '',
+        line3: '',
+        locality: '',
+        region: '',
+        postalCode: '',
+        countryCodeAlpha2: ''
+      }
+    },
+    onLookupComplete: function (data, next) {
+      // use `data` here, then call `next()`
+      console.log("onLookupComplete :");
+      console.log(data);
+      next();
+    }
+  };
+
+  $(function () {
+
+    function fetchClientToken() {
+      return $.ajax({
+        type: 'GET',
+        url: '/client-token'
+      });
+    }
+
+    function initBrainTreeClient() {
+      braintree.dropin.create({
+        authorization: clientToken,
+        container: '#dropin-container',
+        dataCollector: true,
+        locale: locale,
+        allowedPaymentMethods: [{
+          type: 'CARD',
+          parameters: {
+            billingAddressRequired: true,
+            billingAddressParameters: {
+              format: 'FULL'
+            }
+          }
+        }],
+        threeDSecure: true
+      }, function (createErr, instance) {
+        if (createErr) {
+          console.error(createErr);
+          $('#error-message').html('setup BrainTree client failed.');
+          return;
+        }
+        button.addEventListener('click', function () {
+          threeDSecureParameters.amount = amount;
+          instance.requestPaymentMethod({
+            threeDSecure: threeDSecureParameters
+          }, function (requestPaymentMethodErr, payload) {
+            if (requestPaymentMethodErr) {
+              console.error(requestPaymentMethodErr);
+              $('#error-message').html('request PaymentMethod failed.');
+              return;
+            }
+            liabilityShifted = payload.threeDSecureInfo.liabilityShifted;
+            liabilityShiftPossible = payload.threeDSecureInfo.liabilityShiftPossible;
+            console.log('liabilityShifted: ' + liabilityShifted + ' liabilityShiftPossible: ' + liabilityShiftPossible);
+            if (liabilityShifted || (!liabilityShifted && !liabilityShiftPossible)) {
+              // 3ds verification passed or the card does not support 3ds verification support
+              var additionalData = [
+                { 'key': 'paymentMethodNonce', 'value': payload.nonce },
+                { 'key': 'deviceData', 'value': payload.deviceData }
+              ];
+              var body = {
+                'orderId': orderId,
+                'amount': amount,
+                'additionalData': additionalData
+              }
+              $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                url: submitApiUrl,
+                data: JSON.stringify(body)
+              }).done(function (result) {
+                instance.teardown(function (teardownErr) {
+                  if (teardownErr) {
+                    console.error('Could not tear down Drop-in UI!');
+                  } else {
+                    console.info('Drop-in UI has been torn down!');
+                    // Remove the 'Submit payment' button
+                    $('#submit-button').remove();
+                  }
+                });
+
+                if (result.success) {
+                  console.log('Authorization success: transaction id: ' + result.id + " order id: " + result.orderId);
+                  $('#checkout-message').html('Payment authorization success');
+                  {{!-- top.location.href = resultURL; --}}
+                } else {
+                  console.error(result);
+                  $('#error-message').html('Payment authorization failed');
+                }
+              });
+            } else {
+              $('#error-message').html('3DS verification failed, please try another card.');
+              return;
+            }
+          });
+        });
+      });
+    }
+
+    fetchClientToken().done(result => {
+      if (!result.success) {
+        console.error(result);
+        $('#error-message').html('fetch client token failed.');
+      } else {
+        clientToken = result.clientToken;
+        initBrainTreeClient();
+      }
+    });
+  });
+</script>

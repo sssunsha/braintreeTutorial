@@ -8,7 +8,8 @@ var indexRouter = require('./routes/index');
 var formRouter = require('./routes/form');
 var usersRouter = require('./routes/users');
 var e2eTestRouter = require('./routes/e2e_test');
-
+var clientTokenRouter = require('./routes/client_token');
+var checkout = require('./routes/checkout');
 var app = express();
 
 // global controller
@@ -31,8 +32,8 @@ app.use('/', indexRouter);
 app.use('/form', formRouter);
 app.use('/users', usersRouter);
 app.use('/e2e', e2eTestRouter);
+app.use('/client-token', clientTokenRouter);
 // The checkout route
-var checkout = require('./routes/checkout');
 app.use('/submit', checkout);
 
 // catch 404 and forward to error handler
