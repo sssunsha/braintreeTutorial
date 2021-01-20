@@ -82,15 +82,11 @@
         container: '#dropin-container',
         dataCollector: true,
         locale: locale,
-        allowedPaymentMethods: [{
-          type: 'CARD',
-          parameters: {
-            billingAddressRequired: true,
-            billingAddressParameters: {
-              format: 'FULL'
-            }
+        card: {
+          cardholderName: {
+            required: true
           }
-        }],
+        },
         threeDSecure: true
       }, function (createErr, instance) {
         if (createErr) {
