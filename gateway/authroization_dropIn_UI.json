@@ -1,0 +1,1337 @@
+{
+	"id": 768,
+	"pattern": "HOSTED_FIELDS",
+	"requestType": "AUTHORIZATION",
+	"outboundMapping": {
+		"url": "https://api.sandbox.braintreegateway.com/merchants/${vars.merchantId}/transactions",
+		"authenticationIds": [505],
+		"method": "POST",
+		"requestContentType": "application/json",
+		"requestExample": "{\n\t\"transaction\": {\n\t\t\t\"amount\": \"10\",\n\t\t\t\"payment_method_nonce\": \"tokencc_bh_7w2z4j_v6425n_2bqjf9_fv4x6d_6q2\",\n\t\t\t\"device_data\": {\"correlation_id\":\"20be1d232b6202de423bda12612afb9e\"},\n\t\t\t\"order_id\": \"4\",\n\t\t\t\"options\": {\n\t\t\t\t\"submit_for_settlement\": false\n\t\t\t},\n\t\t\t\"type\": \"sale\"\n\t\t}\n}",
+		"responseExample": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<transaction>\n    <id>7tm0cn8h</id>\n    <status>authorized</status>\n    <type>sale</type>\n    <currency-iso-code>EUR</currency-iso-code>\n    <amount>10.00</amount>\n    <merchant-account-id>sap</merchant-account-id>\n    <sub-merchant-account-id nil=\"true\"/>\n    <master-merchant-account-id nil=\"true\"/>\n    <order-id>4</order-id>\n    <created-at type=\"datetime\">2020-12-18T02:58:16Z</created-at>\n    <updated-at type=\"datetime\">2020-12-18T02:58:16Z</updated-at>\n    <customer>\n        <id nil=\"true\"/>\n        <first-name nil=\"true\"/>\n        <last-name nil=\"true\"/>\n        <company nil=\"true\"/>\n        <email nil=\"true\"/>\n        <website nil=\"true\"/>\n        <phone nil=\"true\"/>\n        <fax nil=\"true\"/>\n    </customer>\n    <billing>\n        <id nil=\"true\"/>\n        <first-name nil=\"true\"/>\n        <last-name nil=\"true\"/>\n        <company nil=\"true\"/>\n        <street-address nil=\"true\"/>\n        <extended-address nil=\"true\"/>\n        <locality nil=\"true\"/>\n        <region nil=\"true\"/>\n        <postal-code>90099</postal-code>\n        <country-name nil=\"true\"/>\n        <country-code-alpha2 nil=\"true\"/>\n        <country-code-alpha3 nil=\"true\"/>\n        <country-code-numeric nil=\"true\"/>\n    </billing>\n    <refund-id nil=\"true\"/>\n    <refund-ids type=\"array\"/>\n    <refunded-transaction-id nil=\"true\"/>\n    <partial-settlement-transaction-ids type=\"array\"/>\n    <authorized-transaction-id nil=\"true\"/>\n    <settlement-batch-id nil=\"true\"/>\n    <shipping>\n        <id nil=\"true\"/>\n        <first-name nil=\"true\"/>\n        <last-name nil=\"true\"/>\n        <company nil=\"true\"/>\n        <street-address nil=\"true\"/>\n        <extended-address nil=\"true\"/>\n        <locality nil=\"true\"/>\n        <region nil=\"true\"/>\n        <postal-code nil=\"true\"/>\n        <country-name nil=\"true\"/>\n        <country-code-alpha2 nil=\"true\"/>\n        <country-code-alpha3 nil=\"true\"/>\n        <country-code-numeric nil=\"true\"/>\n    </shipping>\n    <custom-fields/>\n    <avs-error-response-code nil=\"true\"/>\n    <avs-postal-code-response-code>M</avs-postal-code-response-code>\n    <avs-street-address-response-code>I</avs-street-address-response-code>\n    <cvv-response-code>M</cvv-response-code>\n    <gateway-rejection-reason nil=\"true\"/>\n    <processor-authorization-code>6M3VZL</processor-authorization-code>\n    <processor-response-code>1000</processor-response-code>\n    <processor-response-text>Approved</processor-response-text>\n    <additional-processor-response nil=\"true\"/>\n    <voice-referral-number nil=\"true\"/>\n    <purchase-order-number nil=\"true\"/>\n    <tax-amount nil=\"true\"/>\n    <tax-exempt type=\"boolean\">false</tax-exempt>\n    <sca-exemption-requested nil=\"true\"/>\n    <processed-with-network-token type=\"boolean\">false</processed-with-network-token>\n    <credit-card>\n        <token nil=\"true\"/>\n        <bin>444433</bin>\n        <last-4>1111</last-4>\n        <card-type>Visa</card-type>\n        <expiration-month>03</expiration-month>\n        <expiration-year>2030</expiration-year>\n        <customer-location>US</customer-location>\n        <cardholder-name nil=\"true\"/>\n        <image-url>https://assets.braintreegateway.com/payment_method_logo/visa.png?environment=sandbox</image-url>\n        <prepaid>Unknown</prepaid>\n        <healthcare>Unknown</healthcare>\n        <debit>No</debit>\n        <durbin-regulated>Unknown</durbin-regulated>\n        <commercial>Unknown</commercial>\n        <payroll>Unknown</payroll>\n        <issuing-bank>Unknown</issuing-bank>\n        <country-of-issuance>GBR</country-of-issuance>\n        <product-id>Unknown</product-id>\n        <global-id nil=\"true\"/>\n        <account-type nil=\"true\"/>\n        <unique-number-identifier nil=\"true\"/>\n        <venmo-sdk type=\"boolean\">false</venmo-sdk>\n    </credit-card>\n    <status-history type=\"array\">\n        <status-event>\n            <timestamp type=\"datetime\">2020-12-18T02:58:16Z</timestamp>\n            <status>authorized</status>\n            <amount>10.00</amount>\n            <user>will.sun@sap.com</user>\n            <transaction-source>api</transaction-source>\n        </status-event>\n    </status-history>\n    <plan-id nil=\"true\"/>\n    <subscription-id nil=\"true\"/>\n    <subscription>\n        <billing-period-end-date nil=\"true\"/>\n        <billing-period-start-date nil=\"true\"/>\n    </subscription>\n    <add-ons type=\"array\"/>\n    <discounts type=\"array\"/>\n    <descriptor>\n        <name nil=\"true\"/>\n        <phone nil=\"true\"/>\n        <url nil=\"true\"/>\n    </descriptor>\n    <recurring type=\"boolean\">false</recurring>\n    <channel nil=\"true\"/>\n    <service-fee-amount nil=\"true\"/>\n    <escrow-status nil=\"true\"/>\n    <disbursement-details>\n        <disbursement-date nil=\"true\"/>\n        <settlement-amount nil=\"true\"/>\n        <settlement-currency-iso-code nil=\"true\"/>\n        <settlement-currency-exchange-rate nil=\"true\"/>\n        <funds-held nil=\"true\"/>\n        <success nil=\"true\"/>\n    </disbursement-details>\n    <disputes type=\"array\"/>\n    <authorization-adjustments type=\"array\"/>\n    <payment-instrument-type>credit_card</payment-instrument-type>\n    <processor-settlement-response-code></processor-settlement-response-code>\n    <processor-settlement-response-text></processor-settlement-response-text>\n    <network-response-code nil=\"true\"/>\n    <network-response-text nil=\"true\"/>\n    <three-d-secure-info nil=\"true\"/>\n    <ships-from-postal-code nil=\"true\"/>\n    <shipping-amount nil=\"true\"/>\n    <discount-amount nil=\"true\"/>\n    <network-transaction-id>020201218025816</network-transaction-id>\n    <processor-response-type>approved</processor-response-type>\n    <authorization-expires-at type=\"datetime\">2020-12-25T02:58:16Z</authorization-expires-at>\n    <retry-ids type=\"array\"/>\n    <retried-transaction-id nil=\"true\"/>\n    <refund-global-ids type=\"array\"/>\n    <partial-settlement-transaction-global-ids type=\"array\"/>\n    <refunded-transaction-global-id nil=\"true\"/>\n    <authorized-transaction-global-id nil=\"true\"/>\n    <global-id>dHJhbnNhY3Rpb25fN3RtMGNuOGg</global-id>\n    <retry-global-ids type=\"array\"/>\n    <retried-transaction-global-id nil=\"true\"/>\n    <retrieval-reference-number>1234567</retrieval-reference-number>\n    <installment-count nil=\"true\"/>\n    <installments type=\"array\"/>\n    <refunded-installments type=\"array\"/>\n    <response-emv-data nil=\"true\"/>\n    <acquirer-reference-number nil=\"true\"/>\n    <merchant-identification-number nil=\"true\"/>\n    <terminal-identification-number nil=\"true\"/>\n    <merchant-name nil=\"true\"/>\n    <merchant-address>\n        <street-address nil=\"true\"/>\n        <locality nil=\"true\"/>\n        <region nil=\"true\"/>\n        <postal-code nil=\"true\"/>\n        <phone nil=\"true\"/>\n    </merchant-address>\n    <pin-verified type=\"boolean\">false</pin-verified>\n</transaction>",
+		"requestMappingFields": {
+			"mappings": [
+				{
+					"from": "$.transaction.device_data.correlation_id",
+					"to": "${input.customFields.deviceData}",
+					"arrayMapping": false,
+					"fixed": false
+				},
+				{
+					"from": "$.transaction.amount",
+					"to": "${input.amount}",
+					"arrayMapping": false,
+					"fixed": false
+				},
+				{
+					"from": "$.transaction.payment_method_nonce",
+					"to": "${input.customFields.paymentMethodNonce}",
+					"arrayMapping": false,
+					"fixed": false
+				},
+				{
+					"from": "$.transaction.options.submit_for_settlement",
+					"to": "false",
+					"arrayMapping": false,
+					"fixed": true
+				},
+				{
+					"from": "$.transaction.type",
+					"to": "sale",
+					"arrayMapping": false,
+					"fixed": true
+				},
+				{
+					"from": "$.transaction.order_id",
+					"to": "${input.referenceId}",
+					"arrayMapping": false,
+					"fixed": false
+				}
+			]
+		},
+		"responseMappingFields": {
+			"mappings": [
+				{
+					"from": "transaction.settlement-batch-id.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.acquirer-reference-number.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.avs-error-response-code.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.sub-merchant-account-id.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.ships-from-postal-code.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.channel.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.descriptor.phone.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.descriptor.name.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.descriptor.url.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.type.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.billing.extended-address.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.billing.locality.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.billing.country-name.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.billing.country-code-numeric.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.billing.first-name.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.billing.country-code-alpha2.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.billing.postal-code.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.billing.country-code-alpha3.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.billing.street-address.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.billing.company.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.billing.id.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.billing.region.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.billing.last-name.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.merchant-account-id.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.processor-response-type.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.refund-ids.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.partial-settlement-transaction-ids.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.shipping.extended-address.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.shipping.locality.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.shipping.country-name.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.shipping.country-code-numeric.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.shipping.first-name.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.shipping.country-code-alpha2.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.shipping.postal-code.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.shipping.country-code-alpha3.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.shipping.street-address.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.shipping.company.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.shipping.id.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.shipping.region.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.shipping.last-name.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.discounts.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.network-response-code.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.retry-global-ids.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.currency-iso-code.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.installments.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.avs-street-address-response-code.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.created-at.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.created-at.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.id.#text",
+					"to": "pspReference",
+					"arrayMapping": false,
+					"fixed": false,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.global-id.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.refund-global-ids.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.tax-exempt.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.tax-exempt.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.refunded-transaction-id.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.recurring.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.recurring.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.subscription-id.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.payment-instrument-type.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.processor-response-code.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.status-history.status-event.amount.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.status-history.status-event.transaction-source.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.status-history.status-event.user.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.status-history.status-event.timestamp.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.status-history.status-event.timestamp.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.status-history.status-event.status.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.status-history.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.disputes.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.three-d-secure-info.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.disbursement-details.settlement-currency-iso-code.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.disbursement-details.disbursement-date.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.disbursement-details.funds-held.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.disbursement-details.success.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.disbursement-details.settlement-currency-exchange-rate.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.disbursement-details.settlement-amount.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.master-merchant-account-id.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.add-ons.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.plan-id.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.voice-referral-number.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.authorized-transaction-id.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.authorization-adjustments.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.escrow-status.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.cvv-response-code.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.retried-transaction-global-id.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.terminal-identification-number.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.merchant-name.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.refunded-transaction-global-id.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.pin-verified.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.pin-verified.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.additional-processor-response.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.status.#text",
+					"to": "transactionStatus",
+					"map": {
+						"authorized": "ACCEPTED",
+						"default": "REJECTED"
+					},
+					"arrayMapping": false,
+					"fixed": false,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.sca-exemption-requested.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.merchant-address.postal-code.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.merchant-address.street-address.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.merchant-address.phone.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.merchant-address.locality.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.merchant-address.region.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.purchase-order-number.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.expiration-year.#text",
+					"to": "cardExpYear",
+					"arrayMapping": false,
+					"fixed": false,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.customer-location.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.commercial.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.issuing-bank.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.last-4.#text",
+					"to": "cardLast4",
+					"arrayMapping": false,
+					"fixed": false,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.product-id.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.bin.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.durbin-regulated.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.prepaid.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.image-url.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.unique-number-identifier.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.token.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.healthcare.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.venmo-sdk.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.venmo-sdk.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.card-type.#text",
+					"to": "cardType",
+					"map": {
+						"visa": "VISA",
+						"default": "NONE"
+					},
+					"arrayMapping": false,
+					"fixed": false,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.expiration-month.#text",
+					"to": "cardExpMonth",
+					"arrayMapping": false,
+					"fixed": false,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.account-type.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.payroll.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.global-id.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.debit.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.cardholder-name.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.country-of-issuance.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.service-fee-amount.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.subscription.billing-period-end-date.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.subscription.billing-period-start-date.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.network-response-text.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.tax-amount.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.partial-settlement-transaction-global-ids.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.gateway-rejection-reason.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.shipping-amount.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.refunded-installments.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.response-emv-data.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.authorization-expires-at.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.authorization-expires-at.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.amount.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.processor-response-text.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.updated-at.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.updated-at.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.processed-with-network-token.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.processed-with-network-token.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.order-id.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.network-transaction-id.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.avs-postal-code-response-code.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.processor-authorization-code.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.retry-ids.type",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.authorized-transaction-global-id.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.retried-transaction-id.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.discount-amount.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.installment-count.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.merchant-identification-number.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.customer.website.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.customer.phone.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.customer.company.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.customer.id.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.customer.fax.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.customer.first-name.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.customer.email.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.customer.last-name.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.refund-id.nil",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.retrieval-reference-number.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.descriptor.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.billing.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.shipping.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.status-history.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.status-history.status-event.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.disbursement-details.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.merchant-address.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.credit-card.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.subscription.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "transaction.customer.#text",
+					"arrayMapping": false,
+					"fixed": true,
+					"isCustom": false,
+					"persistCustomField": false
+				}
+			]
+		},
+		"responseContentType": "application/xml",
+		"headers": {
+			"X-ApiVersion": "5",
+			"Accept": "*/*"
+		}
+	},
+	"dynamicScript": {
+		"cssUrl": "",
+		"jsUrl": "",
+		"html": "<script src=\"https://js.braintreegateway.com/web/dropin/1.25.0/js/dropin.min.js\"></script>\n<script src=\"http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js\"></script>\n\n<div id=\"dropin-wrapper\">\n    <div id=\"checkout-message\"></div>\n    <div id=\"dropin-container\"></div>\n    <button id=\"submit-button\">pay</button>\n</div>\n<style>\n    #submit-button {\n        background-color: #0a6ed1;\n        color: white;\n        width: 100%;\n        height: 40px;\n        font-size: 14px;\n        border-radius: 4px;\n    }\n</style>\n<script>\n    var button = document.querySelector('#submit-button');\n    var tokenizationKey = 'sandbox_mfw29vzd_mpmfynzxz947hjzd';\n\n    var clientToken = '${input.customFields.clientToken}';\n    var orderId = '${input.orderId}';\n    var amount = '${input.amount}';\n    var referenceId = '${input.referenceId}';\n    var resultURL = '${input.resultURL}';\n    var submitApiUrl = '${input.submitURL}';\n    var authorization = localStorage.getItem('o-auth-token') || localStorage.getItem('Authorization') || '';\n    var customerSessionId = localStorage.getItem('guest-customer-session-id') || localStorage.getItem('Customer-session-id') || '';\n    var locale = '${input.languageCode}-${input.countryCode}';\n\n    var threeDSecureParameters = {\n        amount: '',\n        email: '${input.emailAddress}',\n        mobilePhoneNumber: '${input.phoneNumber}',\n        billingAddress: {\n            givenName: '${input.billingAddress.firstName}',\n            surname: '${input.billingAddress.lastName}',\n            phoneNumber: '${input.billingAddress.phoneNumber}',\n            streetAddress: '${input.billingAddress.addressLine1}',\n            extendedAddress: '${input.billingAddress.addressLine2}',\n            line3: '${input.billingAddress.addressLine3}',\n            locality: '${input.billingAddress.city}',\n            region: '',\n            postalCode: '${input.billingAddress.postalCode}',\n            countryCodeAlpha2: ''\n        },\n        additionalInformation: {\n            workPhoneNumber: '',\n            shippingGivenName: '${input.shippingAddress.firstName}',\n            shippingSurname: '${input.shippingAddress.lastName}',\n            shippingPhone: '',\n            shippingAddress: {\n                streetAddress: '${input.shippingAddress.addressLine1}',\n                extendedAddress: '${input.shippingAddress.addressLine2}',\n                line3: '${input.shippingAddress.addressLine3}',\n                locality: '${input.shippingAddress.city}',\n                region: '',\n                postalCode: '${input.shippingAddress.postalCode}',\n                countryCodeAlpha2: ''\n            }\n        },\n        onLookupComplete: function (data, next) {\n            // use `data` here, then call `next()`\n            console.log(\"onLookupComplete :\");\n            console.log(data);\n            next();\n        }\n    };\n\n    function initBrainTreeClient() {\n        braintree.dropin.create({\n            authorization: clientToken,\n            container: '#dropin-container',\n            dataCollector: true,\n            locale: locale,\n            card: {\n                cardholderName: {\n                    required: true\n                }\n            },\n            threeDSecure: true\n        }, function (createErr, instance) {\n            if (createErr) {\n                console.error(createErr);\n                $('#error-message').html('setup BrainTree client failed.');\n                return;\n            }\n            button.addEventListener('click', function () {\n                threeDSecureParameters.amount = amount;\n                instance.requestPaymentMethod({\n                    threeDSecure: threeDSecureParameters\n                }, function (requestPaymentMethodErr, payload) {\n                    if (requestPaymentMethodErr) {\n                        console.error(requestPaymentMethodErr);\n                        $('#error-message').html('request PaymentMethod failed.');\n                        return;\n                    }\n                    liabilityShifted = payload.threeDSecureInfo.liabilityShifted;\n                    liabilityShiftPossible = payload.threeDSecureInfo.liabilityShiftPossible;\n                    console.log('liabilityShifted: ' + liabilityShifted + ' liabilityShiftPossible: ' + liabilityShiftPossible);\n                    if (liabilityShifted || (!liabilityShifted && !liabilityShiftPossible)) {\n                        // 3ds verification passed or the card does not support 3ds verification support\n                        var additionalData = [\n                            { 'key': 'paymentMethodNonce', 'value': payload.nonce },\n                            { 'key': 'deviceData', 'value': payload.deviceData }\n                        ];\n                        var body = {\n                            'orderId': orderId,\n                            'amount': amount,\n                            'upscalePaymentSessionID': referenceId,\n                            'paymentMethod': 'CREDIT_CARD',\n                            'encryptedToken': payload.nonce,\n                            'additionalData': additionalData\n                        }\n                        $.ajax({\n                            type: 'POST',\n                            dataType: 'json',\n                            contentType: 'application/json; charset=utf-8',\n                            url: submitApiUrl,\n                            headers: {\n                                'Content-Language': locale,\n                                'Authorization': authorization,\n                                'Customer-session-id': customerSessionId\n                            },\n                            xhrFields: {\n                                withCredentials: true\n                            },\n                            crossDomain: true,\n                            data: JSON.stringify(body)\n                        }).done(function (result) {\n                            instance.teardown(function (teardownErr) {\n                                if (teardownErr) {\n                                    console.error('Could not tear down Drop-in UI!');\n                                } else {\n                                    console.info('Drop-in UI has been torn down!');\n                                    // Remove the 'Submit payment' button\n                                    $('#submit-button').remove();\n                                }\n                            });\n\n                            if (result.success) {\n                                console.log('Authorization success: transaction id: ' + result.id + \" order id: \" + result.orderId);\n                                $('#checkout-message').html('Payment authorization success');\n                                top.location.href = resultURL;\n                            } else {\n                                console.error(result);\n                                $('#error-message').html('Payment authorization failed');\n                            }\n                        });\n                    } else {\n                        $('#error-message').html('3DS verification failed, please try another card.');\n                        return;\n                    }\n                });\n            });\n        });\n    }\n\n    if (!clientToken) {\n        $('#error-message').html('fetch client token failed.');\n    } else {\n        initBrainTreeClient();\n    }\n</script>",
+		"cssUrls": [],
+		"jsUrls": []
+	},
+	"remoteApiOutboundMapping": {
+		"url": "https://api.sandbox.braintreegateway.com/merchants/${vars.merchantId}/client_token",
+		"authenticationIds": [505],
+		"method": "POST",
+		"requestContentType": "application/json",
+		"requestExample": "{\"client_token\": {\"version\": \"2\"} }",
+		"responseExample": "<?xml version='1.0' encoding='UTF-8'?><client-token><value>123</value></client-token>",
+		"requestMappingFields": {
+			"mappings": [
+				{
+					"from": "$.client_token.version",
+					"to": "2",
+					"arrayMapping": false,
+					"fixed": true
+				}
+			]
+		},
+		"responseMappingFields": {
+			"mappings": [
+				{
+					"from": "client-token.value.#text",
+					"to": "clientToken",
+					"arrayMapping": false,
+					"fixed": false,
+					"isCustom": true,
+					"persistCustomField": true
+				}
+			]
+		},
+		"responseContentType": "application/xml",
+		"headers": {
+			"X-ApiVersion": "5",
+			"Accept": "*/*"
+		}
+	},
+	"verify": {
+		"localVerifyMapping": {
+			"mappings": [
+				{
+					"from": "gateway.paymentStatus",
+					"to": "result",
+					"map": {
+						"CANCELLED": "CANCELLED",
+						"AUTHORISED": "AUTHORIZED",
+						"UNAUTHORISED": "UNAUTHORIZED",
+						"AUTHORIZED": "AUTHORIZED",
+						"UNAUTHORIZED": "UNAUTHORIZED"
+					},
+					"arrayMapping": false,
+					"fixed": false,
+					"isCustom": false,
+					"persistCustomField": false
+				},
+				{
+					"from": "paymentStatus",
+					"to": "result",
+					"map": {
+						"CANCELLED": "CANCELLED",
+						"AUTHORISED": "AUTHORIZED",
+						"UNAUTHORISED": "UNAUTHORIZED",
+						"AUTHORIZED": "AUTHORIZED",
+						"UNAUTHORIZED": "UNAUTHORIZED"
+					},
+					"arrayMapping": false,
+					"fixed": false,
+					"isCustom": false,
+					"persistCustomField": false
+				}
+			]
+		}
+	}
+}
